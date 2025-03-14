@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Rating Prediction</title>
+
+    <style>
+        h1 {
+            text-align: center;
+            color: white;
+        }
+
+        html {
+            overflow-y: scroll;
+        }
+
+        body {
+            background-image: url("https://seoimgak.mmtcdn.com/blog/sites/default/files/hero_528.jpg?__pIA7NiNRQj2i.CwaQF2aTbgQs9_u7R");
+            height: 100%;
+            background-position: center;
+            background-repeat: repeat;
+            background-size: cover;
+        }
+
+        .login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        input, button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 250px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login">
+        <h1>Predict Restaurant Ratings</h1>
+
+        <!-- Main Input For Receiving Query to our ML -->
+        <form action="{{ url_for('predict') }}" method="post">
+
+            <input type="text" name="Online_Order" placeholder="Online_Order" list="OnlineOrder" required />
+            <datalist id="OnlineOrder">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </datalist>
+
+            <input type="text" name="Book_Table" placeholder="Book_Table" list="BookTable" required />
+            <datalist id="BookTable">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </datalist>
+
+            <input type="text" name="Menu" placeholder="Menu" list="Menu" required />
+            <datalist id="Menu">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </datalist>
+
+            <input type="text" name="City" placeholder="City" list="City" required />
+            <datalist id="City">
+                <option value="0">Banashankari</option>
+                <option value="1">Bannerghatta Road</option>
+                <option value="2">Basavanagudi</option>
+                <option value="3">Bellandur</option>
+                <option value="4">Brigade Road</option>
+                <option value="5">Brookefield</option>
+                <option value="6">BTM</option>
+                <option value="7">Church Street</option>
+                <option value="8">Electronic City</option>
+                <option value="9">Frazer Town</option>
+                <option value="10">HSR</option>
+                <option value="11">Indiranagar</option>
+                <option value="12">Jayanagar</option>
+                <option value="13">JP Nagar</option>
+                <option value="14">Kalyan Nagar</option>
+                <option value="15">Kammanahalli</option>
+                <option value="16">Koramangala 4th Block</option>
+                <option value="17">Koramangala 5th Block</option>
+                <option value="18">Koramangala 6th Block</option>
+                <option value="19">Koramangala 7th Block</option>
+                <option value="20">Lavelle Road</option>
+                <option value="21">Malleshwaram</option>
+                <option value="22">Marathahalli</option>
+                <option value="23">MG Road</option>
+                <option value="24">New BEL Road</option>
+                <option value="25">Old Airport Road</option>
+                <option value="26">Rajajinagar</option>
+                <option value="27">Rajarajeshwari Nagar</option>
+                <option value="28">Residency Road</option>
+                <option value="29">Sarjapur Road</option>
+                <option value="30">Whitefield</option>
+            </datalist>
+
+            <input type="text" name="Cuisines" placeholder="Cuisines" list="Cuisines" required />
+            <datalist id="Cuisines">
+                <option value="0">Afghani</option>
+                <option value="1">American</option>
+                <option value="2">Arabian</option>
+                <option value="3">Asian</option>
+                <option value="4">Bakery</option>
+                <option value="5">BBQ</option>
+                <option value="6">Bengali</option>
+                <option value="7">Beverages</option>
+                <option value="8">Bihari</option>
+                <option value="9">British</option>
+                <option value="10">Chinese</option>
+                <option value="11">Continental</option>
+                <option value="12">Desserts</option>
+                <option value="13">Fast Food</option>
+                <option value="14">French</option>
+                <option value="15">Gujarati</option>
+                <option value="16">Healthy Food</option>
+                <option value="17">Hyderabadi</option>
+                <option value="18">Italian</option>
+                <option value="19">Japanese</option>
+                <option value="20">Kashmiri</option>
+                <option value="21">Kerala</option>
+                <option value="22">Korean</option>
+                <option value="23">Lebanese</option>
+                <option value="24">Mediterranean</option>
+                <option value="25">Mexican</option>
+                <option value="26">Mughlai</option>
+                <option value="27">North Indian</option>
+                <option value="28">South Indian</option>
+                <option value="29">Seafood</option>
+                <option value="30">Tibetan</option>
+            </datalist>
+
+            <input type="number" name="No_of_Varities" placeholder="No_of_Varities" min="1" max="10" required />
+
+            <input type="text" name="Category" placeholder="Category" list="Category" required />
+            <datalist id="Category">
+                <option value="0">Excellent</option>
+                <option value="1">Good</option>
+                <option value="2">Average</option>
+                <option value="3">Poor</option>
+            </datalist>
+
+            <form action="/predict" method="post">
+    <input type="number" name="Cost_Per_Person" placeholder="Cost Per Person" min="20" max="3000" step="5" required />
+    <button type="submit">Predict</button>
+</form>
+
+<!-- Prediction Result -->
+{% if prediction_text %}
+    <div id="result">
+        {{ prediction_text }}
+    </div>
+{% endif %}
+
+<style>
+    #result {
+        color: red;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+</style>
+
+        </form>
+
+
+    </div>
+
+</body>
+</html>
